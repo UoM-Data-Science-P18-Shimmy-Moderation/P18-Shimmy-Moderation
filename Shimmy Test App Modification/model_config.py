@@ -6,12 +6,17 @@ from scipy.special import softmax
 import json
 import os
 import re
+from pathlib import Path
 
 class SentimentClassifier:
 
     def __init__(self):
-        self.model = AutoModelForSequenceClassification.from_pretrained('./model')
-        self.tokenizer = AutoTokenizer.from_pretrained('./tokenizer')
+        base_path = Path(__file__).parent  # Get the directory of the current file
+        model_path = base_path / "../model"  # Adjust the relative path to the model directory
+        tokenizer_path = base_path / "../tokenizer"
+
+        self.model = AutoModelForSequenceClassification.from_pretrained(model_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(tokenizer_path)
         self.action_dict = {
             0: 'Needs Moderation',
             1: 'User Approval Needed',
@@ -87,7 +92,7 @@ class Reasoner:
 
 if __name__=='__main__':
 
-    offense_types_file_path = os.path.join('data', 'harm_categories.json')
+    offense_types_file_path = Path(__file__).parent.parent / "data" / "harm_categories.json"
     classifier = SentimentClassifier()
     text = input("Enter Comment: ")
     flag, category, action = classifier.predict(text)
@@ -108,6 +113,6 @@ if __name__=='__main__':
 
 
 
-    
+
 
 

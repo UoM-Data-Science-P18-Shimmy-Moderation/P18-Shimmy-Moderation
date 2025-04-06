@@ -14,6 +14,7 @@ except ModuleNotFoundError:
 from model_config import SentimentClassifier, Reasoner
 import os 
 import re
+from pathlib import Path
 
 # print(st.__version__)  # Check Streamlit version 1.38.0
 
@@ -28,6 +29,13 @@ def classify_text(model, text):
     return model.predict(text)
     # return model(text)[0]
 
+def clear_database():
+    if streamlit_available:
+        conn = sqlite3.connect("moderation.db", check_same_thread=False)
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM moderation_log")
+        conn.commit()
+        conn.close()
 
 if not streamlit_available:
     print("Streamlit is not available. Please install it with: pip install streamlit==1.38.0")
@@ -51,6 +59,11 @@ else:
     """)
     conn.commit()
 
+    # Clear the database only once when the app starts or refreshes
+    if "db_cleared" not in st.session_state:
+        clear_database()
+        st.session_state["db_cleared"] = True
+
     result = None  # Store result globally for use in dashboard
 
     # Load moderation model (custom or fallback)
@@ -59,20 +72,20 @@ else:
         return load_model()
     
     model = load_moderation_model()
-    
+
     # Severity and category estimation logic (with 0.75 threshold for flagging)
-    def interpret_results(preds,user_input):
-        default_offense_types_file_path_setting = os.path.join('data', 'harm_categories.json')
+    def interpret_results(preds, user_input):
+        default_offense_types_file_path_setting = Path(__file__).parent.parent / "data" / "harm_categories.json"
         flag, category, action = preds
         if flag == 0:
             flagged = "Yes"
-            reasoner = load_reasoner(user_input,default_offense_types_file_path_setting)
+            reasoner = load_reasoner(user_input, default_offense_types_file_path_setting)
             response = reasoner.generate_response()
             category_match = re.search(r"\*\*Category:\*\*\s*(.+)", response)
             reason_match = re.search(r"\*\*Reason:\*\*\s*([\s\S]+)", response)
             category = category_match.group(1).strip() if category_match else ""
             reason = reason_match.group(1).strip() if reason_match else ""
-            explanation = action +". " + reason
+            explanation = action + ". " + reason
             severity = 5
         else:
             flagged = "No"
@@ -97,7 +110,7 @@ else:
             with st.spinner("Analyzing..."):
                 try:
                     predictions = classify_text(model, user_input)
-                    result = interpret_results(predictions,user_input)
+                    result = interpret_results(predictions, user_input)
                     cursor.execute("""
                         INSERT INTO moderation_log (message, severity, category, flagged, explanation)
                         VALUES (?, ?, ?, ?, ?)
@@ -131,11 +144,9 @@ else:
             '''
             display_df = df.drop(columns=["id"]) if "id" in df.columns else df
             st.dataframe(display_df, use_container_width=True)
-            # st.dataframe(df.reset_index(drop=True), use_container_width=True)
             st.subheader("Flagged Content")
             flagged_df = df[df['Flagged'] == "Yes"]
             if not flagged_df.empty:
-                # st.write(flagged_df[['Message', 'Severity', 'Category', 'Explanation']])
                 for idx, row in flagged_df.iterrows():
                     with st.expander(f"{row['Message'][:50]}..."):
                         st.write(f"**Category**: {row['Category']}")
@@ -147,7 +158,6 @@ else:
                             conn.commit()
                             st.success("Record deleted.")
                             st.rerun()
-                            # st.info("Please manually refresh the page to see the update.")
             else:
                 st.write("No content flagged for manual review.")
         else:
@@ -161,9 +171,3 @@ else:
         
     else:
         st.caption("Note: This demo uses the `toxic-bert` pipeline from HuggingFace Transformers.")
-
-
-# if not streamlit_available:
-#     print("This script requires Streamlit to run. Please install it with: pip install streamlit==1.38.0")
-# else:
-#     print("Run command in terminal: streamlit run app.py")
