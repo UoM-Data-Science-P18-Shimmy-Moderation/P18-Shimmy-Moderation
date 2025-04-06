@@ -1,0 +1,82 @@
+[
+    {
+        "category": "Hate Speech",
+        "description": "Attacks on a person or group based on race, religion, ethnicity, nationality, or similar characteristics."
+    },
+    {
+        "category": "Sexism / Misogyny",
+        "description": "Statements that degrade or demean individuals based on gender or reinforce gender stereotypes."
+    },
+    {
+        "category": "Homophobia / Transphobia",
+        "description": "Offensive language or slurs directed at LGBTQ+ individuals."
+    },
+    {
+        "category": "Racism",
+        "description": "Derogatory comments targeting individuals based on their race or ethnicity."
+    },
+    {
+        "category": "Religious Intolerance",
+        "description": "Insulting or mocking religious beliefs, figures, or practices."
+    },
+    {
+        "category": "Body Shaming",
+        "description": "Mocking or insulting someone's physical appearance, including weight, height, skin tone, etc."
+    },
+    {
+        "category": "Ableism",
+        "description": "Derogatory remarks toward people with disabilities or mental health issues."
+    },
+    {
+        "category": "Ageism",
+        "description": "Offensive or dismissive comments based on someone\u2019s age."
+    },
+    {
+        "category": "Xenophobia / Nationalism",
+        "description": "Statements expressing hostility or prejudice against people from other countries or cultures."
+    },
+    {
+        "category": "Toxic Masculinity / Misandry",
+        "description": "Harmful stereotypes or hateful content about men or masculinity."
+    },
+    {
+        "category": "Bullying / Harassment",
+        "description": "Repeated or targeted attacks on an individual, often with the intent to intimidate or harm."
+    },
+    {
+        "category": "Slurs and Profanity",
+        "description": "Use of explicit language meant to insult or provoke."
+    },
+    {
+        "category": "Sexual Harassment",
+        "description": "Unwanted sexual comments, jokes, or advances."
+    },
+    {
+        "category": "Threats of Violence",
+        "description": "Statements that suggest or encourage physical harm."
+    },
+    {
+        "category": "Incitement to Violence",
+        "description": "Content that advocates or encourages others to commit harmful acts."
+    },
+    {
+        "category": "Doxxing",
+        "description": "Sharing personal information with malicious intent."
+    },
+    {
+        "category": "Dehumanization",
+        "description": "Referring to individuals or groups in ways that strip them of human qualities."
+    },
+    {
+        "category": "Gaslighting / Psychological Abuse",
+        "description": "Manipulative language aimed at making someone doubt their reality or worth."
+    },
+    {
+        "category": "Cultural Appropriation Mockery",
+        "description": "Insulting or mocking cultural practices, attire, or language of a marginalized group."
+    },
+    {
+        "category": "Trolling / Provocation",
+        "description": "Intentionally inflammatory or disruptive messages meant to provoke emotional responses."
+    }
+]
