@@ -43,3 +43,13 @@ Run the main.py file
 ```
 python main.py
 ```
+
+### Shimmy Test App
+Shimmy Test App is designed by our group to simulate the process of handling comments. 
+
+Note: You should install the libraries in requirements.txt. Download `model`, `tokenizer`,`Shimmy Test App Modification` into your python environment. Download `data/harm_categories.json`.
+
+Type command below in the terminal:
+```
+streamlit run app.py
+```
