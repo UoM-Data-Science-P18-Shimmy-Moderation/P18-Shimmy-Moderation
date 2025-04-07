@@ -60,7 +60,7 @@ else:
     
     model = load_moderation_model()
     
-    # Severity and category estimation logic (with 0.75 threshold for flagging)
+    # Severity and category estimation logic
     def interpret_results(preds,user_input):
         default_offense_types_file_path_setting = os.path.join('data', 'harm_categories.json')
         flag, category, action = preds
