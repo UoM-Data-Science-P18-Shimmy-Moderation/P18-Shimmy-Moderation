@@ -1,5 +1,5 @@
 # NOTE: This script requires Streamlit and Transformers or a custom moderation model.
-# Run with: streamlit run app.py
+# Run with: streamlit run app_version0406.py
 
 # Attempt to import libraries and set a fallback mode if unavailable
 streamlit_available = True
@@ -139,9 +139,13 @@ else:
         df = pd.read_sql_query("SELECT id, message AS Message, severity AS Severity, category AS Category, flagged AS Flagged, explanation AS Explanation, created_at AS Timestamp FROM moderation_log ORDER BY created_at DESC", conn)
 
         if not df.empty:
-            '''
-            Display analyse log and add delete functionality
-            '''
+            
+            # This section displays the moderation log in a table format and provides functionality 
+            # to delete flagged content. The log includes details such as message, severity, category, 
+            # flagged status, explanation, and timestamp. Flagged content is highlighted separately, 
+            # and users can expand each flagged entry to view details and delete specific records 
+            # from the database if necessary.
+            
             display_df = df.drop(columns=["id"]) if "id" in df.columns else df
             st.dataframe(display_df, use_container_width=True)
             st.subheader("Flagged Content")
