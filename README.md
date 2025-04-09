@@ -29,7 +29,7 @@ ollama serve
 The port 11434 should be available for listening (usually free)
 
 
-### Classifier Exection:
+### Classifier Execution:
 Install the requirements
 
 ```
