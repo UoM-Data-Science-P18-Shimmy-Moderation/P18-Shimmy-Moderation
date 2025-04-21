@@ -4,3 +4,4 @@ openai==0.28.0
 scipy==1.15.2
 transformers==4.50.3
 streamlit==1.38.0
+torch==2.6.0
