@@ -88,7 +88,7 @@ class SentimentClassifier:
         # Respond with only a single integer: 3, 4, or 5.
         # """
         
-        response = ollama.chat(model="gemma3:4b", messages=[{"role": "user", "content": prompt}])
+        response = ollama.chat(model="gemma3:27b", messages=[{"role": "user", "content": prompt}])
         try:
             classified_category = int(response["message"]["content"].strip())
         except ValueError:
