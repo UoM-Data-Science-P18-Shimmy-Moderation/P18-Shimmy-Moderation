@@ -61,13 +61,13 @@ class SentimentClassifier:
         5 - Content that is extremely offensive, violent, or harmful. Tone is extremely hostile or malicious. Contains **explicit threats of severe violence**, or encouragement of heinous acts, or extremely hateful language (e.g. threats to kill, rape, or harm someone, or multiple hate slurs and calls for violence).
 
         Examples:
-        Text: "Don't be a dick. We're all going out on Friday!"
+        Text: "Don't be a dick. We're all going out on Friday! and text that contains shit, suicidal, deaths etc.,"
         Category: 3
 
-        Text: "Only f**gots block people."
+        Text: "Only f**gots block people and text that usually contains bitch, fuck, drugs, genitals"
         Category: 4
 
-        Text: "I will chop your fucking head off if you speak to me like that again."
+        Text: "I will chop your fucking head off if you speak to me like that again and text that contains offensive words in more aggressive way"
         Category: 5
 
         Now determine the correct category for the new text.
