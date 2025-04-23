@@ -11,7 +11,7 @@ except ModuleNotFoundError:
     streamlit_available = False
     st = None
 
-from model_config_0423 import SentimentClassifier, Reasoner
+from model_config import SentimentClassifier, Reasoner
 import os 
 import re
 
