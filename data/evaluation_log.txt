@@ -1,0 +1,17 @@
+==== Sentiment Classification Evaluation Log ====
+Timestamp: 2025-04-24 10:23:41.396153
+LLM Engine: Gemma3, Params: 12bModel: model
+Tokenizer: tokenizer
+Number of samples: 533
+
+Accuracy Score: 0.7229
+
+Confusion Matrix:
+[[109  27   0   0   0]
+ [  6  99   2   0   0]
+ [  0   8  82   0   0]
+ [  0   3  16  81  31]
+ [  1   2  15  47  85]]
+
+
+Log saved successfully.
