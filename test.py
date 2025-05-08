@@ -10,6 +10,7 @@ import os
 import pandas as pd
 from sklearn.metrics import accuracy_score, confusion_matrix
 from tqdm import tqdm
+from datetime import datetime
 
 class SentimentClassifier:
 
@@ -50,32 +51,32 @@ class SentimentClassifier:
     
     def get_sentiment(self, text):
         cleaned_text = self.preprocess(text)
-        prompt = f"""
-        You are a language model that classifies text into one of the five categories based on tone and offensiveness.
+        # prompt = f"""
+        # You are a language model that classifies text into one of the five categories based on tone and offensiveness.
 
-        Categories:
-        1 - Safe and Positive: Statements that are friendly, cheerful, or optimistic. Includes joy, encouragement, harmless fun, or clearly positive experiences.
-        2 - Neutral or Slightly Negative: Statements with a neutral tone, mild criticism, or ambivalence. May include mixed feelings (e.g. "I like it, but...") or casual remarks without strong emotion.
-        3 - Content with a moderate level of offensiveness. Tone is rude, angry, or sarcastic. May contain insults or profanity out of frustration (e.g. calling someone an "idiot" or saying "this is bullshit"), **but no hate slurs or explicit threats** of violence.
-        4 - Content with a high level of offensiveness or hate. Tone is extremely aggressive, angry, or hateful. Often includes strong profanity and **slurs or very derogatory insults** targeting a person or group. May express hateful views or minor threats (e.g. using a slur or saying "I hate you all" with aggression), **but not an explicit serious violent threat**.
-        5 - Content that is extremely offensive, violent, or harmful. Tone is extremely hostile or malicious. Contains **explicit threats of severe violence**, or encouragement of heinous acts, or extremely hateful language (e.g. threats to kill, rape, or harm someone, or multiple hate slurs and calls for violence).
+        # Categories:
+        # 1 - Safe and Positive: Statements that are friendly, cheerful, or optimistic. Includes joy, encouragement, harmless fun, or clearly positive experiences.
+        # 2 - Neutral or Slightly Negative: Statements with a neutral tone, mild criticism, or ambivalence. May include mixed feelings (e.g. "I like it, but...") or casual remarks without strong emotion.
+        # 3 - Content with a moderate level of offensiveness. Tone is rude, angry, or sarcastic. May contain insults or profanity out of frustration (e.g. calling someone an "idiot" or saying "this is bullshit"), **but no hate slurs or explicit threats** of violence.
+        # 4 - Content with a high level of offensiveness or hate. Tone is extremely aggressive, angry, or hateful. Often includes strong profanity and **slurs or very derogatory insults** targeting a person or group. May express hateful views or minor threats (e.g. using a slur or saying "I hate you all" with aggression), **but not an explicit serious violent threat**.
+        # 5 - Content that is extremely offensive, violent, or harmful. Tone is extremely hostile or malicious. Contains **explicit threats of severe violence**, or encouragement of heinous acts, or extremely hateful language (e.g. threats to kill, rape, or harm someone, or multiple hate slurs and calls for violence).
 
-        Examples:
-        Text: "Don't be a dick. We're all going out on Friday! and text that contains shit, suicidal, deaths etc.,"
-        Category: 3
+        # Examples:
+        # Text: "Don't be a dick. We're all going out on Friday! and text that contains shit, suicidal, deaths etc.,"
+        # Category: 3
 
-        Text: "Only f**gots block people and text that usually contains bitch, fuck, drugs, genitals"
-        Category: 4
+        # Text: "Only f**gots block people and text that usually contains bitch, fuck, drugs, genitals"
+        # Category: 4
 
-        Text: "I will chop your fucking head off if you speak to me like that again and text that contains offensive words in more aggressive way"
-        Category: 5
+        # Text: "I will chop your fucking head off if you speak to me like that again and text that contains offensive words in more aggressive way"
+        # Category: 5
 
-        Now determine the correct category for the new text.
+        # Now determine the correct category for the new text.
 
-        Text: "{cleaned_text}"
+        # Text: "{cleaned_text}"
 
-        Respond with only a single integer: 1, 2, 3, 4, or 5.
-        """
+        # Respond with only a single integer: 1, 2, 3, 4, or 5.
+        # """
 
         # prompt = f"""
         # Classify the toxicity of the given text into one of these categories (3, 4, 5):
@@ -87,6 +88,52 @@ class SentimentClassifier:
 
         # Respond with only a single integer: 3, 4, or 5.
         # """
+
+        prompt = f"""
+            You are a language model that classifies text into one of five categories based on tone, language, and potential harm. Read the definitions and examples carefully before classifying the input text.
+
+            Categories:
+
+            1 – Safe and Positive:
+            Friendly, joyful, or optimistic content. Includes positive experiences, encouragement, support, or harmless jokes.
+            Examples:
+            - "Had such a wonderful day with my besties today!"
+            - "Yes, well done! Absolutely rooting for you!"
+
+            2 – Neutral or Slightly Negative:
+            Emotionally neutral or mildly critical tone. May include casual complaints, mixed feelings, sarcasm without toxicity, or low-impact criticism.
+            Examples:
+            - "I really like McDonald's, but I know it's unhealthy."
+            - "God, the gym class was tough today!"
+
+            3 – Insults or Profanity (Not Hateful or Threatening):
+            Toxic or offensive language using insults or profanity, but without any hate slurs or threats of violence. Emotionally charged or angry tone, usually directed at actions or individuals, not identity groups.
+            Examples:
+            - "Don't be a dick. We're all going out on Friday!"
+            - "What the hell were you thinking, you dumbass?"
+            - "This is absolute bullshit, I can’t take it anymore."
+
+            4 – Hate Speech or Group-Based Offense (No Threats):
+            Content that includes slurs, extreme derogatory language, or attacks based on identity (race, gender, religion, orientation, etc.). Hateful tone, but **no direct threat** or call to harm.
+            Examples:
+            - "Only f**gots block people."
+            - "You filthy [racial slur], get out of my country."
+            - "All [group] are trash and shouldn’t be allowed here."
+
+            5 – Explicit Threats or Incitement to Harm:
+            Statements that **threaten violence**, wish physical harm, or endorse or incite violent or criminal actions. May include hate slurs, but what matters most is **explicit violent intent**.
+            Examples:
+            - "I will chop your fucking head off if you talk to me like that again."
+            - "Let’s shoot every last one of those [slur] bastards."
+            - "You better kill yourself before I do it for you."
+
+            Now determine the correct category for the new text.
+
+            Text: "{cleaned_text}"
+
+            Respond with only a single integer: 1, 2, 3, 4, or 5.
+        """
+
         
         response = ollama.chat(model="gemma3:12b", messages=[{"role": "user", "content": prompt}])
         try:
@@ -124,6 +171,7 @@ class Reasoner:
 def test_on_df(classifier):
     df = pd.read_csv('./data/shimmy/cleaned.csv')
     # df = df[df['Category'].isin([3, 4, 5])]
+    df['Text'] = df['Text'].astype('str')
 
     y = df['Category']
     preds = []
@@ -149,6 +197,18 @@ def test_on_df(classifier):
 
     data.to_csv('./data/preds.csv')
 
+    # Save logs and metrics to txt
+    log_path = './data/evaluation_log.txt'
+    with open(log_path, 'w') as f:
+        f.write("==== Sentiment Classification Evaluation Log ====\n")
+        f.write(f"Timestamp: {datetime.now()}\n")
+        f.write(f"LLM Engine: Gemma3, Params: 12b")
+        f.write(f"Model: {classifier.model.name_or_path}\n")
+        f.write(f"Tokenizer: {classifier.tokenizer.name_or_path}\n")
+        f.write(f"Number of samples: {len(df)}\n")
+        f.write(f"\nAccuracy Score: {acc_score:.4f}\n")
+        f.write(f"\nConfusion Matrix:\n{cm}\n")
+        f.write("\n\nLog saved successfully.\n")
 
 
 
