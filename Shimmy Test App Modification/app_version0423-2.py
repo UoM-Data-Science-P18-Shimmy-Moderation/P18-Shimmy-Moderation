@@ -73,31 +73,31 @@ else:
     
     model = load_moderation_model()
     
-
-    # Severity and category estimation logic
+    # Severity and category estimation logic (with 0.75 threshold for flagging)
     def interpret_results(preds,user_input):
         default_offense_types_file_path_setting = os.path.join('data', 'harm_categories.json')
         flag, category, action = preds
-        if flag == 0:
+        if (flag == 4) or (flag == 5):
             flagged = "Yes"
-            reasoner = load_reasoner(user_input, default_offense_types_file_path_setting)
+            reasoner = load_reasoner(user_input,default_offense_types_file_path_setting)
             response = reasoner.generate_response()
-            category_match = re.search(r"\*\*Category:\*\*\s*(.+)", response)
+            #category_match = re.search(r"\*\*Category:\*\*\s*(.+)", response)
             reason_match = re.search(r"\*\*Reason:\*\*\s*([\s\S]+)", response)
-            category = category_match.group(1).strip() if category_match else ""
+            #category = category_match.group(1).strip() if category_match else ""
             reason = reason_match.group(1).strip() if reason_match else ""
-            explanation = action + ". " + reason
-            severity = 5
+            explanation = action +". " + reason
+            severity = int(category.split()[-1])
         else:
             flagged = "No"
             explanation = action
-            severity = 0 if flag == 2 else 3
+            severity = int(category.split()[-1])
         return {
             "severity": severity,
             "category": category,
             "explanation": explanation,
             "flagged": flagged
         }
+    
 
     # Streamlit UI Tabs
     st.title("Shimmy Content Moderation System")

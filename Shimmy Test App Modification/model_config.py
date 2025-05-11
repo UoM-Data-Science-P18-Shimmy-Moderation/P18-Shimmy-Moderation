@@ -113,8 +113,17 @@ class SentimentClassifier:
 
 class Reasoner:
     def __init__(self, text, file_path):
-        self.text = self.preprocess(text)
+        self.text = self.preprocess(text)  # Preprocess the input text
         self.offense_types_str = json.dumps(json.load(open(file_path, 'r')), indent=4)
+
+    def preprocess(self, text):
+        # Preprocess the text (similar to SentimentClassifier)
+        new_text = []
+        for t in text.split(" "):
+            t = '@user' if t.startswith('@') and len(t) > 1 else t
+            t = 'http' if t.startswith('http') else t
+            new_text.append(t)
+        return " ".join(new_text)
 
     def generate_response(self):
         prompt = f"""
@@ -124,7 +133,7 @@ class Reasoner:
         """
         
         response = ollama.chat(model="gemma3:12b", messages=[{"role": "user", "content": prompt}])
-        return response["message"]["content"].strip() 
+        return response["message"]["content"].strip()
     
 
 
