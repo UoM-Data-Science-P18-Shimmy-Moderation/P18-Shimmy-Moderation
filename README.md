@@ -59,5 +59,5 @@ Shimmy Test App is designed by our group to simulate the process of handling com
    - `data/harm_categories.json`
 3. Run the app using the command below:
    ```bash
-   streamlit run app_version0406.py
+   streamlit run app_version0423-2.py
    ```
